@@ -22,6 +22,8 @@ int main(void) {
     setup_signal_handlers();
     init_input();
     atexit(restore_input);
+    render_setup();
+    atexit(render_teardown);
 
     struct timeval global_start, global_end;
     gettimeofday(&global_start, NULL);
@@ -54,7 +56,6 @@ int main(void) {
             double elapsed = get_elapsed_time(stage_start, now);
 
             pthread_mutex_lock(&g_stage_mutex);
-            system("clear");
             render(&stage, &player, elapsed, s, NUM_STAGES);
             pthread_mutex_unlock(&g_stage_mutex);
 
@@ -103,6 +104,7 @@ int main(void) {
 
     gettimeofday(&global_end, NULL);
     double total_time = get_elapsed_time(global_start, global_end);
+    render_teardown();
     printf("\nTotal Playtime: %.3fs\n", total_time);
 
     if (cleared_all && g_running) {

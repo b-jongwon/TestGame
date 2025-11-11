@@ -4,8 +4,20 @@
 #include "render.h"
 #include "obstacle.h"
 
+void render_setup(void) {
+    printf("\033[2J\033[H\033[?25l");
+    fflush(stdout);
+}
+
+void render_teardown(void) {
+    printf("\033[?25h");
+    fflush(stdout);
+}
+
 void render(const Stage *stage, const Player *player, double elapsed_time, int current_stage, int total_stages) {
     char buffer[MAX_Y][MAX_X + 1];
+
+    printf("\033[H");
 
     for (int y = 0; y < MAX_Y; y++) {
         strncpy(buffer[y], stage->map[y], MAX_X);
@@ -36,4 +48,6 @@ void render(const Stage *stage, const Player *player, double elapsed_time, int c
         putchar('\n');
     }
     printf("Controls: W/A/S/D to move, q to quit. Avoid X and reach G.\n");
+
+    fflush(stdout);
 }
